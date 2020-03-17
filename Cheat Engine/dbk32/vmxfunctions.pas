@@ -1998,7 +1998,11 @@ begin
     repeat
       if te32.th32OwnerProcessID=pid then
       begin
-        th:=OpenThread(ifthen(GetSystemType<=6,THREAD_QUERY_INFORMATION, THREAD_QUERY_LIMITED_INFORMATION), false, te32.th32ThreadID);
+        //th:=OpenThread(ifthen(GetSystemType<=6,THREAD_QUERY_INFORMATION, THREAD_QUERY_LIMITED_INFORMATION), false, te32.th32ThreadID);
+        if GetSystemType<=6 then
+        th:=OpenThread(THREAD_QUERY_INFORMATION,false,te32.th32ThreadID )
+        else
+        th:=OpenThread(2048, false,te32.th32ThreadID);
 
         if NtQueryInformationThread(th, ThreadBasicInformation, @tbi, sizeof(tbi), @x)=0 then
           teb.address:=qword(tbi.TebBaseAddress)
